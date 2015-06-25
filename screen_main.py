@@ -9,11 +9,11 @@ class MainScreen(Frame):
 
     def __init__(self, parent):
         Frame.__init__(self, parent)
-        self.main_container = Frame(parent, background="bisque")
+        self.main_container = Frame(parent)
         self.main_container.pack(side=TOP, fill=BOTH, expand=True)
-        self.main_navigation = Frame(self.main_container, background="green")
+        self.main_navigation = Frame(self.main_container)
         self.main_navigation.pack(side=LEFT, fill=Y, expand=False)
-        self.details_frame = Frame(self.main_container, background="yellow")
+        self.details_frame = Frame(self.main_container)
         self.details_frame.pack(side=RIGHT, fill=BOTH, expand=True)
         self.details_frame.grid_rowconfigure(0, weight=1)
         self.details_frame.grid_columnconfigure(0, weight=1)
@@ -29,11 +29,11 @@ class MainScreen(Frame):
 
         self.display_audio_playing()
 
-    def show_frame(self, Screen):
+    def show_frame(self, screen):
         _list = self.details_frame.winfo_children()
         for i in _list:
             i.destroy()
-        Screen(self.details_frame)
+        screen(self.details_frame)
 
     def display_audio_playing(self):
         self.show_frame(NowPlayingScreen)

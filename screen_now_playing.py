@@ -4,30 +4,29 @@ from tkinter import *
 from PIL import Image, ImageTk
 import os
 
-class NowPlayingScreen(Frame):
+class NowPlayingScreen:
 
     def __init__(self, parent):
-        Frame.__init__(self, parent)
         self.music_on = False
-        self.main_container = Frame(parent, background="blue")
+        self.main_container = Frame(parent)
         self.main_container.pack(side=TOP, fill=BOTH, expand=True)
 
-        self.control_frame = Frame(self.main_container, background="red")
+        self.control_frame = Frame(self.main_container)
         self.control_frame.pack(side=RIGHT, fill=Y)
         self.setup_controls()
 
-        self.music_details_frame = Frame(self.main_container, background="purple")
+        self.music_details_frame = Frame(self.main_container)
         self.music_details_frame.pack(side=LEFT, fill=BOTH, expand=True)
 
-        self.music_titles_frame = Frame(self.music_details_frame, background="black")
+        self.music_titles_frame = Frame(self.music_details_frame)
         self.music_titles_frame.pack(side=TOP)
         self.setup_music_info()
 
-        self.music_timer_frame = Frame(self.music_details_frame, background="orange")
+        self.music_timer_frame = Frame(self.music_details_frame)
         self.music_timer_frame.pack(side=BOTTOM, fill=BOTH)
         self.setup_music_timer()
 
-        self.music_art_frame = Frame(self.music_details_frame, background="blue")
+        self.music_art_frame = Frame(self.music_details_frame)
         self.music_art_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
         self.setup_music_art()
 
