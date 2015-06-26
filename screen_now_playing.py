@@ -8,6 +8,7 @@ class NowPlayingScreen:
 
     def __init__(self, parent):
         self.music_on = False
+        self.resources_folder_path = os.path.dirname(__file__)
         self.main_container = Frame(parent)
         self.main_container.pack(side=TOP, fill=BOTH, expand=True)
 
@@ -33,16 +34,40 @@ class NowPlayingScreen:
 
 
     def setup_controls(self):
-        self.play_pause_button = Button(self.control_frame, text="Play", command=self.toggle_music)
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_play.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.play_icon = ImageTk.PhotoImage(resized)
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_pause.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.pause_icon = ImageTk.PhotoImage(resized)
+        self.play_pause_button = Button(self.control_frame, image=self.play_icon, command=self.toggle_music)
         self.play_pause_button.pack(side=TOP)
-        self.prev_song_button = Button(self.control_frame, text="Prev")
+
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_previous.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.prev_icon = ImageTk.PhotoImage(resized)
+        self.prev_song_button = Button(self.control_frame, image=self.prev_icon)
         self.prev_song_button.pack(side=TOP)
-        self.next_song_button = Button(self.control_frame, text="Next")
+
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_next.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.next_icon = ImageTk.PhotoImage(resized)
+        self.next_song_button = Button(self.control_frame, image=self.next_icon)
         self.next_song_button.pack(side=TOP)
-        self.volume_increase_button = Button(self.control_frame, text="+")
+
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_volume_up.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.volume_up_icon = ImageTk.PhotoImage(resized)
+        self.volume_increase_button = Button(self.control_frame, image=self.volume_up_icon)
         self.volume_increase_button.pack(side=TOP)
-        self.volume_decrease_button = Button(self.control_frame, text="-")
+
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_volume_down.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.volume_down_icon = ImageTk.PhotoImage(resized)
+        self.volume_decrease_button = Button(self.control_frame, image=self.volume_down_icon)
         self.volume_decrease_button.pack(side=TOP)
+
+
         self.total_song_time_label = Label(self.control_frame, text="3:30")
         self.total_song_time_label.pack(side=BOTTOM, fill=X)
         self.current_song_time_label = Label(self.control_frame, text="0:00")
@@ -51,10 +76,10 @@ class NowPlayingScreen:
     def toggle_music(self):
         if self.music_on:
             self.music_on = False
-            self.play_pause_button["text"] = "Play"
+            self.play_pause_button["image"] = self.play_icon
         else:
             self.music_on = True
-            self.play_pause_button["text"] = "Pause"
+            self.play_pause_button["image"] = self.pause_icon
 
     def setup_music_info(self):
         self.song_name_label = Label(self.music_titles_frame, text="Song Name")
@@ -63,7 +88,7 @@ class NowPlayingScreen:
         self.artist_name_label.pack(side=TOP, fill=X)
 
     def setup_music_art(self):
-        photo_file_path = os.path.dirname(__file__) + "/resources/default_album.gif"
+        photo_file_path = self.resources_folder_path + "/resources/default_album.gif"
         self.image = Image.open(photo_file_path)
         self.img_copy = self.image.copy()
 
