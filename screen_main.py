@@ -1,8 +1,10 @@
 __author__ = 'colt'
 
 from tkinter import *
+from PIL import Image, ImageTk
 from screen_now_playing import NowPlayingScreen
 from screen_music_library import MusicLibraryScreen
+import os
 
 
 class MainScreen(Frame):
@@ -15,17 +17,33 @@ class MainScreen(Frame):
         self.main_navigation.pack(side=LEFT, fill=Y, expand=False)
         self.details_frame = Frame(self.main_container)
         self.details_frame.pack(side=RIGHT, fill=BOTH, expand=True)
-        self.details_frame.grid_rowconfigure(0, weight=1)
-        self.details_frame.grid_columnconfigure(0, weight=1)
 
-        nowplayingputton = Button(self.main_navigation, text="Now Playing", command=self.display_audio_playing)
-        nowplayingputton.pack(side=TOP)
-        playlistbutton = Button(self.main_navigation, text="Playlists", command=self.display_playlist)
-        playlistbutton.pack(side=TOP)
-        browselibrarybutton = Button(self.main_navigation, text="Browse Library", command=self.browse_library)
-        browselibrarybutton.pack(side=TOP)
-        settingsbutton = Button(self.main_navigation, text="Settings")
-        settingsbutton.pack(side=BOTTOM)
+        self.resources_folder_path = os.path.dirname(__file__)
+
+
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_now_playing.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.nowplaying_icon = ImageTk.PhotoImage(resized)
+        self.nowplayingputton = Button(self.main_navigation, image=self.nowplaying_icon, command=self.display_audio_playing)
+        self.nowplayingputton.pack(side=TOP)
+
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_playlist.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.playlist_icon = ImageTk.PhotoImage(resized)
+        self.playlistbutton = Button(self.main_navigation, image=self.playlist_icon, command=self.display_playlist)
+        self.playlistbutton.pack(side=TOP)
+
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_library.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.browselibrary_icon = ImageTk.PhotoImage(resized)
+        self.browselibrarybutton = Button(self.main_navigation, image=self.browselibrary_icon, command=self.browse_library)
+        self.browselibrarybutton.pack(side=TOP)
+
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/settings.png")
+        resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
+        self.settings_icon = ImageTk.PhotoImage(resized)
+        self.settingsbutton = Button(self.main_navigation, image=self.settings_icon)
+        self.settingsbutton.pack(side=BOTTOM)
 
         self.display_audio_playing()
 
