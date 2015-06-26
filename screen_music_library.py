@@ -93,7 +93,7 @@ class BrowseScreen(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
         self.browse_list = Listbox(parent)
-        self.browse_list.pack()
+        self.browse_list.pack(side=TOP, fill=BOTH)
 
         self.populate()
 
@@ -107,7 +107,7 @@ class ArtistsBrowseScreen(BrowseScreen):
 
     def populate(self):
         self.browse_list.insert(END, "artists")
-        for item in ["one", "two", "three", "four"]:
+        for item in ["one", "two", "three", "four", "two", "three", "four", "two", "three", "four"]:
             self.browse_list.insert(END, item)
 
 
