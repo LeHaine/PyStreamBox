@@ -32,8 +32,6 @@ class NowPlayingScreen:
         self.music_art_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
         self.setup_music_art()
 
-
-
     def setup_controls(self):
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_play.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
@@ -67,7 +65,6 @@ class NowPlayingScreen:
         self.volume_down_icon = ImageTk.PhotoImage(resized)
         self.volume_decrease_button = Button(self.control_frame, image=self.volume_down_icon)
         self.volume_decrease_button.pack(side=TOP)
-
 
         self.total_song_time_label = Label(self.control_frame, text="3:30")
         self.total_song_time_label.pack(side=BOTTOM, fill=X)
