@@ -11,6 +11,7 @@ class MainScreen(Frame):
 
     def __init__(self, parent):
         Frame.__init__(self, parent)
+        self.current_button_selected = None
         self.main_container = Frame(parent)
         self.main_container.pack(side=TOP, fill=BOTH, expand=True)
         self.main_navigation = Frame(self.main_container)
@@ -24,26 +25,26 @@ class MainScreen(Frame):
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_now_playing.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.nowplaying_icon = ImageTk.PhotoImage(resized)
-        self.nowplayingputton = Button(self.main_navigation, image=self.nowplaying_icon, command=self.display_audio_playing)
-        self.nowplayingputton.pack(side=TOP)
+        self.nowplaying_button = Button(self.main_navigation, image=self.nowplaying_icon, command=self.display_audio_playing)
+        self.nowplaying_button.pack(side=TOP)
 
-        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_playlist.png")
+        self.img_icon = Image.open(self.resources_folder_path + "/resources/media_list.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.playlist_icon = ImageTk.PhotoImage(resized)
-        self.playlistbutton = Button(self.main_navigation, image=self.playlist_icon, command=self.display_playlist)
-        self.playlistbutton.pack(side=TOP)
+        self.playlist_button = Button(self.main_navigation, image=self.playlist_icon, command=self.display_playlist)
+        self.playlist_button.pack(side=TOP)
 
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_library.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.browselibrary_icon = ImageTk.PhotoImage(resized)
-        self.browselibrarybutton = Button(self.main_navigation, image=self.browselibrary_icon, command=self.browse_library)
-        self.browselibrarybutton.pack(side=TOP)
+        self.browselibrary_button = Button(self.main_navigation, image=self.browselibrary_icon, command=self.browse_library)
+        self.browselibrary_button.pack(side=TOP)
 
         self.img_icon = Image.open(self.resources_folder_path + "/resources/settings.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.settings_icon = ImageTk.PhotoImage(resized)
-        self.settingsbutton = Button(self.main_navigation, image=self.settings_icon)
-        self.settingsbutton.pack(side=BOTTOM)
+        self.settings_button = Button(self.main_navigation, image=self.settings_icon)
+        self.settings_button.pack(side=BOTTOM)
 
         self.display_audio_playing()
 
@@ -52,13 +53,26 @@ class MainScreen(Frame):
         for i in _list:
             i.destroy()
         screen(self.details_frame)
+        self.current_button_selected
 
     def display_audio_playing(self):
+        if self.current_button_selected is not None:
+            self.current_button_selected["state"] = NORMAL
+        self.current_button_selected = self.nowplaying_button
+        self.current_button_selected["state"] = DISABLED
         self.show_frame(NowPlayingScreen)
 
     def display_playlist(self):
+        if self.current_button_selected is not None:
+            self.current_button_selected["state"] = NORMAL
+        self.current_button_selected = self.playlist_button
+        self.current_button_selected["state"] = DISABLED
         print("display play list")
 
     def browse_library(self):
+        if self.current_button_selected is not None:
+            self.current_button_selected["state"] = NORMAL
+        self.current_button_selected = self.browselibrary_button
+        self.current_button_selected["state"] = DISABLED
         self.show_frame(MusicLibraryScreen)
 
