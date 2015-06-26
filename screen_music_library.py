@@ -8,6 +8,7 @@ class MusicLibraryScreen:
 
     def __init__(self, parent):
         self.resources_folder_path = os.path.dirname(__file__)
+        self.current_button_selected = None
 
         self.main_container = Frame(parent)
         self.main_container.pack(side=TOP, fill=BOTH, expand=True)
@@ -18,6 +19,11 @@ class MusicLibraryScreen:
 
         self.navigation_details_frame = Frame(self.main_container)
         self.navigation_details_frame.pack(side=BOTTOM, fill=BOTH)
+
+        self.song_screen = SongsBrowseScreen(self.navigation_details_frame)
+        self.song_screen.pack(side=TOP, fill=BOTH)
+
+        self.view_songs()
 
     def setup_nav_controls(self):
         self.img_icon = Image.open(self.resources_folder_path + "/resources/search.png")
@@ -51,22 +57,86 @@ class MusicLibraryScreen:
         self.view_artists_button.pack(side=RIGHT)
 
     def view_artists(self):
-        print("view artists")
+        self.disable_button(self.view_artists_button)
+        self.show_frame(ArtistsBrowseScreen)
 
     def view_albums(self):
-        print("view albums")
+        self.disable_button(self.view_albums_button)
+        self.show_frame(AlbumsBrowseScreen)
 
     def view_songs(self):
-        print("view songs")
+        self.disable_button(self.view_songs_button)
+        self.show_frame(SongsBrowseScreen)
 
     def view_playlists(self):
-        print('view playlists')
+        self.disable_button(self.view_playlists_button)
+        self.show_frame(PlaylistsBrowseScreen)
 
     def search(self):
         print("search")
+
+    def disable_button(self, button):
+        if self.current_button_selected is not None:
+            self.current_button_selected["state"] = NORMAL
+        self.current_button_selected = button
+        self.current_button_selected["state"] = DISABLED
 
     def show_frame(self, screen):
         _list = self.navigation_details_frame.winfo_children()
         for i in _list:
             i.destroy()
         screen(self.navigation_details_frame)
+
+
+class BrowseScreen(Frame):
+
+    def __init__(self, parent):
+        Frame.__init__(self, parent)
+        self.browse_list = Listbox(parent)
+        self.browse_list.pack()
+
+        self.populate()
+
+    def populate(self):
+        raise NotImplementedError("Please implement this method")
+
+class ArtistsBrowseScreen(BrowseScreen):
+
+    def __init__(self, parent):
+        BrowseScreen.__init__(self, parent)
+
+    def populate(self):
+        self.browse_list.insert(END, "artists")
+        for item in ["one", "two", "three", "four"]:
+            self.browse_list.insert(END, item)
+
+
+class SongsBrowseScreen(BrowseScreen):
+
+    def __init__(self, parent):
+        BrowseScreen.__init__(self, parent)
+
+    def populate(self):
+        self.browse_list.insert(END, "songs")
+        for item in ["one", "two", "three", "four"]:
+            self.browse_list.insert(END, item)
+
+class AlbumsBrowseScreen(BrowseScreen):
+
+    def __init__(self, parent):
+        BrowseScreen.__init__(self, parent)
+
+    def populate(self):
+        self.browse_list.insert(END, "albums")
+        for item in ["one", "two", "three", "four"]:
+            self.browse_list.insert(END, item)
+
+class PlaylistsBrowseScreen(BrowseScreen):
+
+    def __init__(self, parent):
+        BrowseScreen.__init__(self, parent)
+
+    def populate(self):
+        self.browse_list.insert(END, "playlists")
+        for item in ["one", "two", "three", "four"]:
+            self.browse_list.insert(END, item)
