@@ -9,6 +9,7 @@ class NowPlayingScreen:
     def __init__(self, parent):
         self.music_on = False
         self.resources_folder_path = os.path.dirname(__file__)
+
         self.main_container = Frame(parent)
         self.main_container.pack(side=TOP, fill=BOTH, expand=True)
 
