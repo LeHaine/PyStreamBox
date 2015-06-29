@@ -20,9 +20,6 @@ class MusicLibraryScreen:
         self.navigation_details_frame = Frame(self.main_container)
         self.navigation_details_frame.pack(side=BOTTOM, fill=BOTH)
 
-        self.song_screen = SongsBrowseScreen(self.navigation_details_frame)
-        self.song_screen.pack(side=TOP, fill=BOTH)
-
         self.view_songs()
 
     def setup_nav_controls(self):
@@ -85,17 +82,42 @@ class MusicLibraryScreen:
         _list = self.navigation_details_frame.winfo_children()
         for i in _list:
             i.destroy()
-        screen(self.navigation_details_frame)
+        screen(self.navigation_details_frame).pack(side=TOP, fill=BOTH)
 
 
 class BrowseScreen(Frame):
 
     def __init__(self, parent):
         Frame.__init__(self, parent)
-        self.browse_list = Listbox(parent)
-        self.browse_list.pack(side=TOP, fill=BOTH)
+        self.scrollbar = Scrollbar(self, orient=VERTICAL)
+        self.scrollbar.pack(side=RIGHT, fill=Y)
+        self.canvas = Canvas(self, bd=0, highlightthickness=0, yscrollcommand=self.scrollbar.set)
+        self.canvas.pack(side=LEFT, fill=BOTH, expand=True)
+        self.scrollbar.config(command=self.canvas.yview)
+
+        self.canvas.xview_moveto(0)
+        self.canvas.yview_moveto(0)
+
+        self.interior = Frame(self.canvas)
+        self.interior.pack(side=TOP, fill=BOTH, expand=True)
+        self.interior_id = self.canvas.create_window(0, 0, window=self.interior, anchor=NW)
+        self._configure_interior(event=None)
+        self._configure_canvas(event=None)
 
         self.populate()
+
+    def _configure_interior(self, event):
+        width = self.interior.winfo_reqwidth()
+        height = self.interior.winfo_reqheight()
+        self.canvas.config(scrollregion=(0, 0, width, height))
+        if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
+            self.canvas.config(width=self.interior.winfo_reqwidth())
+        self.interior.bind('<Configure>', self._configure_interior)
+
+    def _configure_canvas(self, event):
+        if self.interior.winfo_reqwidth() != self.canvas.winfo_width():
+            self.canvas.itemconfigure(self.interior_id, width=self.canvas.winfo_width())
+        self.canvas.bind('<Configure>', self._configure_canvas)
 
     def populate(self):
         raise NotImplementedError("Please implement this method")
@@ -106,10 +128,9 @@ class ArtistsBrowseScreen(BrowseScreen):
         BrowseScreen.__init__(self, parent)
 
     def populate(self):
-        self.browse_list.insert(END, "artists")
-        for item in ["one", "two", "three", "four", "two", "three", "four", "two", "three", "four"]:
-            self.browse_list.insert(END, item)
-
+        for x in range(0,33):
+            button = Button(self.interior, text=str(x), relief=FLAT)
+            button.pack(fill=BOTH)
 
 class SongsBrowseScreen(BrowseScreen):
 
@@ -117,9 +138,9 @@ class SongsBrowseScreen(BrowseScreen):
         BrowseScreen.__init__(self, parent)
 
     def populate(self):
-        self.browse_list.insert(END, "songs")
-        for item in ["one", "two", "three", "four"]:
-            self.browse_list.insert(END, item)
+        for x in range(0,6):
+            button = Button(self.interior, text=str(x), relief=FLAT)
+            button.pack(fill=BOTH)
 
 class AlbumsBrowseScreen(BrowseScreen):
 
@@ -127,9 +148,9 @@ class AlbumsBrowseScreen(BrowseScreen):
         BrowseScreen.__init__(self, parent)
 
     def populate(self):
-        self.browse_list.insert(END, "albums")
-        for item in ["one", "two", "three", "four"]:
-            self.browse_list.insert(END, item)
+        for x in range(0,15):
+            button = Button(self.interior, text=str(x), relief=FLAT)
+            button.pack(fill=BOTH)
 
 class PlaylistsBrowseScreen(BrowseScreen):
 
@@ -137,6 +158,6 @@ class PlaylistsBrowseScreen(BrowseScreen):
         BrowseScreen.__init__(self, parent)
 
     def populate(self):
-        self.browse_list.insert(END, "playlists")
-        for item in ["one", "two", "three", "four"]:
-            self.browse_list.insert(END, item)
+        for x in range(0,23):
+            button = Button(self.interior, text=str(x), relief=FLAT)
+            button.pack(fill=BOTH)
