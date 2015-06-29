@@ -3,11 +3,12 @@ __author__ = 'colt'
 from tkinter import *
 from PIL import Image, ImageTk
 import os
+import vlc
+import settings
 
 class NowPlayingScreen:
 
     def __init__(self, parent):
-        self.music_on = False
         self.resources_folder_path = os.path.dirname(__file__)
 
         self.main_container = Frame(parent)
@@ -39,7 +40,11 @@ class NowPlayingScreen:
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_pause.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.pause_icon = ImageTk.PhotoImage(resized)
-        self.play_pause_button = Button(self.control_frame, image=self.play_icon, command=self.toggle_music)
+        self.play_pause_button = Button(self.control_frame, command=self.toggle_music)
+        if settings.media_list_player.is_playing():
+            self.play_pause_button["image"] = self.pause_icon
+        else:
+            self.play_pause_button["image"] = self.play_icon
         self.play_pause_button.pack(side=TOP)
 
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_previous.png")
@@ -71,19 +76,28 @@ class NowPlayingScreen:
         self.current_song_time_label = Label(self.control_frame, text="0:00")
         self.current_song_time_label.pack(side=BOTTOM, fill=X)
 
+        if settings.selected_media is not None and not settings.media_list_player.is_playing():
+            self.toggle_music()
+
     def toggle_music(self):
-        if self.music_on:
-            self.music_on = False
+        if settings.media_list_player.is_playing():
             self.play_pause_button["image"] = self.play_icon
+            settings.media_list_player.pause()
         else:
-            self.music_on = True
             self.play_pause_button["image"] = self.pause_icon
+            settings.media_list_player.play()
 
     def setup_music_info(self):
-        self.song_name_label = Label(self.music_titles_frame, text="Song Name")
+        self.song_name_label = Label(self.music_titles_frame, text="No song selected!")
         self.song_name_label.pack(side=TOP, fill=X)
-        self.artist_name_label = Label(self.music_titles_frame, text="Artist Name")
+        self.artist_name_label = Label(self.music_titles_frame)
         self.artist_name_label.pack(side=TOP, fill=X)
+
+        if settings.selected_media is not None:
+            title = settings.selected_media.get_meta(vlc.Meta.Title)
+            artist = settings.selected_media.get_meta(vlc.Meta.Artist)
+            self.song_name_label["text"] = title
+            self.artist_name_label["text"] = artist
 
     def setup_music_art(self):
         photo_file_path = self.resources_folder_path + "/resources/default_album.gif"

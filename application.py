@@ -2,15 +2,17 @@ __author__ = 'colt'
 
 from screen_main import MainScreen
 from tkinter import *
+import glob
+import settings
 
 class Application:
     def __init__(self, master):
+        self.music_path = "/home/colt/Music/"
+        settings.init()
+        self.read_music()
         self.master = master
-        self.create_screens()
         self.apply_fullscreen()
-
-    def create_screens(self):
-        MainScreen(self.master)
+        settings.main_screen = MainScreen(master)
 
     def apply_fullscreen(self):
         self.fullscreen_state = False
@@ -26,6 +28,11 @@ class Application:
         self.fullscreen_state = False
         self.master.attributes("-fullscreen", False)
         return "break"
+
+    def read_music(self):
+        music_files = glob.glob("/home/colt/Music/*.mp3")
+        for m in music_files:
+            settings.song_list.add_media(m)
 
 
 if __name__ == "__main__":

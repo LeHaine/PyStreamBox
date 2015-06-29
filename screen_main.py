@@ -45,7 +45,7 @@ class MainScreen(Frame):
         self.settings_button = Button(self.main_navigation, image=self.settings_icon)
         self.settings_button.pack(side=BOTTOM)
 
-        self.display_audio_playing()
+        self.browse_library()
 
     def show_frame(self, screen):
         _list = self.details_frame.winfo_children()

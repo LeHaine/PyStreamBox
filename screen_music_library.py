@@ -3,6 +3,9 @@ __author__ = 'colt'
 from tkinter import *
 from PIL import Image, ImageTk
 import os
+import vlc
+import settings
+import screen_now_playing
 
 class MusicLibraryScreen:
 
@@ -145,13 +148,20 @@ class SongsBrowseScreen(BrowseScreen):
         BrowseScreen.__init__(self, parent)
 
     def populate(self):
-        for x in range(0,6):
-            item = "Song " + str(x)
-            button = Button(self.interior, text=item, relief=FLAT, command=lambda i=item: self.item_selected(i))
+        total = settings.song_list.count()
+        for x in range(0, total):
+            settings.song_list.lock()
+            item = settings.song_list.item_at_index(x)
+            item.parse()
+            title = item.get_meta(vlc.Meta.Title)
+            settings.song_list.unlock()
+            button = Button(self.interior, text=title, relief=FLAT, command=lambda i=item: self.item_selected(i))
             button.pack(fill=BOTH)
 
     def item_selected(self, item):
-        print(item + " has been selected")
+        settings.selected_media = item
+        settings.main_screen.disable_button(settings.main_screen.nowplaying_button)
+        settings.main_screen.show_frame(screen_now_playing.NowPlayingScreen)
 
 class AlbumsBrowseScreen(BrowseScreen):
 
