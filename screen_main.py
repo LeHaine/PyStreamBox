@@ -52,7 +52,6 @@ class MainScreen(Frame):
         for i in _list:
             i.destroy()
         screen(self.details_frame)
-        self.current_button_selected
 
     def disable_button(self, button):
         if self.current_button_selected is not None:

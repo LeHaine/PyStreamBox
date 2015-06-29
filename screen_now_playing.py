@@ -33,6 +33,12 @@ class NowPlayingScreen:
         self.music_art_frame.pack(side=BOTTOM, fill=BOTH, expand=True)
         self.setup_music_art()
 
+        settings.media_player.event_manager().event_attach(vlc.EventType.MediaPlayerMediaChanged, self.update_music_info)
+        settings.media_player.event_manager().event_attach(vlc.EventType.MediaPlayerTimeChanged, self.update_time_scale)
+
+        if settings.start_media:
+            self.start_media()
+
     def setup_controls(self):
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_play.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
@@ -50,13 +56,13 @@ class NowPlayingScreen:
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_previous.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.prev_icon = ImageTk.PhotoImage(resized)
-        self.prev_song_button = Button(self.control_frame, image=self.prev_icon)
+        self.prev_song_button = Button(self.control_frame, image=self.prev_icon, command=self.prev_song)
         self.prev_song_button.pack(side=TOP)
 
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_next.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.next_icon = ImageTk.PhotoImage(resized)
-        self.next_song_button = Button(self.control_frame, image=self.next_icon)
+        self.next_song_button = Button(self.control_frame, image=self.next_icon, command=self.next_song)
         self.next_song_button.pack(side=TOP)
 
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_volume_up.png")
@@ -76,8 +82,10 @@ class NowPlayingScreen:
         self.current_song_time_label = Label(self.control_frame, text="0:00")
         self.current_song_time_label.pack(side=BOTTOM, fill=X)
 
-        if settings.selected_media is not None and not settings.media_list_player.is_playing():
-            self.toggle_music()
+    def start_media(self):
+        self.play_pause_button["image"] = self.pause_icon
+        settings.start_media = False
+        settings.media_list_player.play_item(settings.selected_media)
 
     def toggle_music(self):
         if settings.media_list_player.is_playing():
@@ -87,17 +95,43 @@ class NowPlayingScreen:
             self.play_pause_button["image"] = self.pause_icon
             settings.media_list_player.play()
 
+    def prev_song(self):
+        if settings.selected_media is not None:
+            settings.media_list_player.previous()
+
+    def next_song(self):
+        if settings.selected_media is not None:
+            settings.media_list_player.next()
+
     def setup_music_info(self):
         self.song_name_label = Label(self.music_titles_frame, text="No song selected!")
         self.song_name_label.pack(side=TOP, fill=X)
         self.artist_name_label = Label(self.music_titles_frame)
         self.artist_name_label.pack(side=TOP, fill=X)
 
+    def update_music_info(self, event):
+        settings.selected_media = settings.media_player.get_media()
         if settings.selected_media is not None:
             title = settings.selected_media.get_meta(vlc.Meta.Title)
             artist = settings.selected_media.get_meta(vlc.Meta.Artist)
             self.song_name_label["text"] = title
             self.artist_name_label["text"] = artist
+            self.total_song_time_label["text"] = self.get_media_duration()
+            self.timer_scale["to"] = settings.selected_media.get_duration() // 1000
+
+    def update_time_scale(self, event):
+        value = settings.media_player.get_time() // 1000
+        self.timer_scale.set(value)
+
+    def get_media_duration(self):
+        ms = settings.selected_media.get_duration()
+        x = ms // 1000
+        seconds = x % 60
+        x //= 60
+        minutes = x % 60
+        if seconds < 10:
+            seconds = "0" + str(seconds)
+        return str(minutes) + ":" + str(seconds)
 
     def setup_music_art(self):
         photo_file_path = self.resources_folder_path + "/resources/default_album.gif"

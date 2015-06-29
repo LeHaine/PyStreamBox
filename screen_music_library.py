@@ -159,6 +159,7 @@ class SongsBrowseScreen(BrowseScreen):
             button.pack(fill=BOTH)
 
     def item_selected(self, item):
+        settings.start_media = True
         settings.selected_media = item
         settings.main_screen.disable_button(settings.main_screen.nowplaying_button)
         settings.main_screen.show_frame(screen_now_playing.NowPlayingScreen)

@@ -11,7 +11,11 @@ def init():
     global media_list_player
     media_list_player = vlc_instance.media_list_player_new()
 
+    global media_player
+    media_player = vlc_instance.media_player_new()
+
     media_list_player.set_media_list(song_list)
+    media_list_player.set_media_player(media_player)
 
     global selected_media
     selected_media = None
@@ -19,3 +23,5 @@ def init():
     global main_screen
     main_screen = None
 
+    global start_media
+    start_media = False
