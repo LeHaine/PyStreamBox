@@ -122,6 +122,9 @@ class BrowseScreen(Frame):
     def populate(self):
         raise NotImplementedError("Please implement this method")
 
+    def item_selected(self, item):
+        raise NotImplementedError("Please implement this method")
+
 class ArtistsBrowseScreen(BrowseScreen):
 
     def __init__(self, parent):
@@ -129,8 +132,12 @@ class ArtistsBrowseScreen(BrowseScreen):
 
     def populate(self):
         for x in range(0,33):
-            button = Button(self.interior, text=str(x), relief=FLAT)
+            item = "Artist " + str(x)
+            button = Button(self.interior, text=item, relief=FLAT, command=lambda i=item: self.item_selected(i))
             button.pack(fill=BOTH)
+
+    def item_selected(self, item):
+        print(item + " has been selected")
 
 class SongsBrowseScreen(BrowseScreen):
 
@@ -139,8 +146,12 @@ class SongsBrowseScreen(BrowseScreen):
 
     def populate(self):
         for x in range(0,6):
-            button = Button(self.interior, text=str(x), relief=FLAT)
+            item = "Song " + str(x)
+            button = Button(self.interior, text=item, relief=FLAT, command=lambda i=item: self.item_selected(i))
             button.pack(fill=BOTH)
+
+    def item_selected(self, item):
+        print(item + " has been selected")
 
 class AlbumsBrowseScreen(BrowseScreen):
 
@@ -149,8 +160,12 @@ class AlbumsBrowseScreen(BrowseScreen):
 
     def populate(self):
         for x in range(0,15):
-            button = Button(self.interior, text=str(x), relief=FLAT)
+            item = "Album " + str(x)
+            button = Button(self.interior, text=item, relief=FLAT, command=lambda i=item: self.item_selected(i))
             button.pack(fill=BOTH)
+
+    def item_selected(self, item):
+        print(item + " has been selected")
 
 class PlaylistsBrowseScreen(BrowseScreen):
 
@@ -159,5 +174,9 @@ class PlaylistsBrowseScreen(BrowseScreen):
 
     def populate(self):
         for x in range(0,23):
-            button = Button(self.interior, text=str(x), relief=FLAT)
+            item = "Playlist " + str(x)
+            button = Button(self.interior, text=item, relief=FLAT, command=lambda i=item: self.item_selected(i))
             button.pack(fill=BOTH)
+
+    def item_selected(self, item):
+        print(item + " has been selected")
