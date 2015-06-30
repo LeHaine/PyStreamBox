@@ -90,12 +90,12 @@ class NowPlayingScreen:
         settings.media_list_player.play_item(settings.selected_media)
 
     def toggle_music(self):
-        if settings.media_list_player.is_playing():
+        if settings.media_player.is_playing():
             self.play_pause_button["image"] = self.play_icon
-            settings.media_list_player.pause()
+            settings.media_player.pause()
         else:
             self.play_pause_button["image"] = self.pause_icon
-            settings.media_list_player.play()
+            settings.media_player.play()
 
     def prev_song(self):
         if settings.selected_media is not None:
@@ -176,13 +176,19 @@ class NowPlayingScreen:
         self.album_photo_label.configure(image=self.album_photo)
 
     def setup_music_timer(self):
-        self.timer_scale = Scale(self.music_timer_frame, from_=0, to=100, orient=HORIZONTAL)
+        self.timer_scale = Scale(self.music_timer_frame, from_=0, to=100, orient=HORIZONTAL, showvalue=False)
         self.timer_scale.bind("<Button-1>", self.detach_time_scale_event)
+        self.timer_scale.bind("<B1-Motion>", self.update_current_time)
         self.timer_scale.bind("<ButtonRelease-1>", self.set_media_time)
         self.timer_scale.pack(side=TOP, fill=BOTH)
 
     def detach_time_scale_event(self, event):
         settings.media_player.event_manager().event_detach(vlc.EventType.MediaPlayerTimeChanged)
+
+    def update_current_time(self, event):
+        ms = self.timer_scale.get()
+        ms *= 1000
+        self.current_song_time_label["text"] = self.get_media_duration(ms)
 
     def set_media_time(self, event):
         ms = self.timer_scale.get()
