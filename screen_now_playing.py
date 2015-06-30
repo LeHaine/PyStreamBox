@@ -39,6 +39,8 @@ class NowPlayingScreen:
         if settings.start_media:
             self.start_media()
 
+        self.update_music_info(event=None)
+
     def setup_controls(self):
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_play.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
@@ -116,15 +118,19 @@ class NowPlayingScreen:
             artist = settings.selected_media.get_meta(vlc.Meta.Artist)
             self.song_name_label["text"] = title
             self.artist_name_label["text"] = artist
-            self.total_song_time_label["text"] = self.get_media_duration()
+            self.total_song_time_label["text"] = self.get_media_duration(settings.selected_media.get_duration())
             self.timer_scale["to"] = settings.selected_media.get_duration() // 1000
 
     def update_time_scale(self, event):
-        value = settings.media_player.get_time() // 1000
-        self.timer_scale.set(value)
+        try:
+            ms = settings.media_player.get_time()
+            value = ms // 1000
+            self.current_song_time_label["text"] = self.get_media_duration(ms)
+            self.timer_scale.set(value)
+        except Exception:
+            return False
 
-    def get_media_duration(self):
-        ms = settings.selected_media.get_duration()
+    def get_media_duration(self, ms):
         x = ms // 1000
         seconds = x % 60
         x //= 60
