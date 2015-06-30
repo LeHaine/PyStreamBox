@@ -38,7 +38,7 @@ class Application:
 if __name__ == "__main__":
     root = Tk()
     root.title("PyStreamBox")
-    root.geometry("320x240+300+300")
+    root.geometry("480x320+300+300")
     application = Application(root)
     root.mainloop()
 
