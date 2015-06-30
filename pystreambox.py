@@ -5,7 +5,7 @@ from tkinter import *
 import glob
 import settings
 
-class Application:
+class PyStreamBox:
     def __init__(self, master):
         self.music_path = "/home/colt/Music/"
         settings.init()
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     root = Tk()
     root.title("PyStreamBox")
     root.geometry("480x320+300+300")
-    application = Application(root)
+    pystreambox = PyStreamBox(root)
     root.mainloop()
 
 
