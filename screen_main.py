@@ -2,8 +2,9 @@ __author__ = 'colt'
 
 from tkinter import *
 from PIL import Image, ImageTk
-from screen_now_playing import NowPlayingScreen
-from screen_music_library import MusicLibraryScreen
+import screen_now_playing
+import screen_music_library
+import screen_playlist_settings
 import os
 
 
@@ -61,13 +62,13 @@ class MainScreen(Frame):
 
     def display_audio_playing(self):
         self.disable_button(self.nowplaying_button)
-        self.show_frame(NowPlayingScreen)
+        self.show_frame(screen_now_playing.NowPlayingScreen)
 
     def display_playlist(self):
         self.disable_button(self.playlist_button)
-        print("display play list")
+        self.show_frame(screen_playlist_settings.PlaylistSettings)
 
     def browse_library(self):
         self.disable_button(self.browselibrary_button)
-        self.show_frame(MusicLibraryScreen)
+        self.show_frame(screen_music_library.MusicLibraryScreen)
 

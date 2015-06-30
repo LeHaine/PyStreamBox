@@ -70,13 +70,13 @@ class NowPlayingScreen:
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_volume_up.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.volume_up_icon = ImageTk.PhotoImage(resized)
-        self.volume_increase_button = Button(self.control_frame, image=self.volume_up_icon)
+        self.volume_increase_button = Button(self.control_frame, image=self.volume_up_icon, command=self.increase_volume)
         self.volume_increase_button.pack(side=TOP)
 
         self.img_icon = Image.open(self.resources_folder_path + "/resources/media_volume_down.png")
         resized = self.img_icon.resize((32, 32), Image.ANTIALIAS)
         self.volume_down_icon = ImageTk.PhotoImage(resized)
-        self.volume_decrease_button = Button(self.control_frame, image=self.volume_down_icon)
+        self.volume_decrease_button = Button(self.control_frame, image=self.volume_down_icon, command=self.decrease_volume)
         self.volume_decrease_button.pack(side=TOP)
 
         self.total_song_time_label = Label(self.control_frame, text="3:30")
@@ -104,6 +104,18 @@ class NowPlayingScreen:
     def next_song(self):
         if settings.selected_media is not None:
             settings.media_list_player.next()
+
+    def increase_volume(self):
+        current_volume = settings.media_player.audio_get_volume()
+        if current_volume < 100:
+            current_volume += 10
+        settings.media_player.audio_set_volume(current_volume)
+
+    def decrease_volume(self):
+        current_volume = settings.media_player.audio_get_volume()
+        if current_volume > 0:
+            current_volume -= 10
+        settings.media_player.audio_set_volume(current_volume)
 
     def setup_music_info(self):
         self.song_name_label = Label(self.music_titles_frame, text="No song selected!")
@@ -165,4 +177,15 @@ class NowPlayingScreen:
 
     def setup_music_timer(self):
         self.timer_scale = Scale(self.music_timer_frame, from_=0, to=100, orient=HORIZONTAL)
+        self.timer_scale.bind("<Button-1>", self.detach_time_scale_event)
+        self.timer_scale.bind("<ButtonRelease-1>", self.set_media_time)
         self.timer_scale.pack(side=TOP, fill=BOTH)
+
+    def detach_time_scale_event(self, event):
+        settings.media_player.event_manager().event_detach(vlc.EventType.MediaPlayerTimeChanged)
+
+    def set_media_time(self, event):
+        ms = self.timer_scale.get()
+        ms *= 1000
+        settings.media_player.set_time(int(ms))
+        settings.media_player.event_manager().event_attach(vlc.EventType.MediaPlayerTimeChanged, self.update_time_scale)

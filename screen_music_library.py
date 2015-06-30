@@ -21,7 +21,7 @@ class MusicLibraryScreen:
         self.setup_nav_controls()
 
         self.navigation_details_frame = Frame(self.main_container)
-        self.navigation_details_frame.pack(side=BOTTOM, fill=BOTH)
+        self.navigation_details_frame.pack(side=TOP, fill=BOTH, expand=True)
 
         self.view_songs()
 
@@ -73,7 +73,7 @@ class MusicLibraryScreen:
         self.show_frame(PlaylistsBrowseScreen)
 
     def search(self):
-        print("search")
+        print("Search needs implemented")
 
     def disable_button(self, button):
         if self.current_button_selected is not None:
@@ -102,7 +102,7 @@ class BrowseScreen(Frame):
         self.canvas.yview_moveto(0)
 
         self.interior = Frame(self.canvas)
-        self.interior.pack(side=TOP, fill=BOTH, expand=True)
+        self.interior.pack(side=TOP, fill=BOTH)
         self.interior_id = self.canvas.create_window(0, 0, window=self.interior, anchor=NW)
         self._configure_interior(event=None)
         self._configure_canvas(event=None)
@@ -184,10 +184,7 @@ class PlaylistsBrowseScreen(BrowseScreen):
         BrowseScreen.__init__(self, parent)
 
     def populate(self):
-        for x in range(0,23):
-            item = "Playlist " + str(x)
-            button = Button(self.interior, text=item, relief=FLAT, command=lambda i=item: self.item_selected(i))
-            button.pack(fill=BOTH)
+        print("pop playlist")
 
     def item_selected(self, item):
         print(item + " has been selected")
